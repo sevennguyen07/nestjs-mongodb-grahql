@@ -1,0 +1,33 @@
+version: "3.8"
+services:
+    nmg_backend:
+        container_name: nmg_backend
+        image: nmg/nmg_backend
+        build: .
+        working_dir: /app
+        restart: unless-stopped
+        env_file:
+            - .env
+        ports:
+          - ${PORT}:${PORT}
+        depends_on:
+            - nmg_mongodb
+
+    nmg_mongodb:
+        container_name: mongodb
+        restart: always
+        image:  mongo:latest
+        environment:
+          - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+          - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+          - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
+        env_file:
+          - .env
+        ports:
+          - ${MONGO_HOST_PORT}:${MONGO_CONTAINER_PORT}
+        volumes:
+          - db_data:/data/db
+        command: mongod --auth --setParameter diagnosticDataCollectionEnabled=false
+
+volumes:
+    db_data:
