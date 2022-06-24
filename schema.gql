@@ -6,25 +6,53 @@ type User {
   _id: ID!
   full_name: String!
   phone: String!
-  email: String!
-  age: Float!
-  gender: String!
+  email: String
+  age: Float
+  gender: String
+  total_amount: Float!
+}
+
+type Order {
+  _id: ID!
+  code: String!
+  amount: Float!
+  interest_rate: Float!
+  user: User!
+  accrued_amount: [Float!]!
 }
 
 type Query {
   users: [User!]!
+  user(_id: String!): User!
+  orders: [Order!]!
+  order(_id: String!): Order!
+  orderByUser(user: String!): [Order!]!
 }
 
 type Mutation {
-  user(_id: String!): User!
   createUser(input: CreateUserInput!): User!
-  updateUser(_id: String!, input: CreateUserInput!): User!
+  updateUser(_id: String!, input: UpdateUserInput!): User!
+  createOrder(input: CreateOrderInput!): Order!
 }
 
 input CreateUserInput {
   full_name: String!
   phone: String!
-  email: String!
-  age: Float!
-  gender: String!
+  email: String
+  age: Float
+  gender: String
+}
+
+input UpdateUserInput {
+  full_name: String
+  phone: String
+  email: String
+  age: Float
+  gender: String
+}
+
+input CreateOrderInput {
+  user: String!
+  amount: Float!
+  interest_rate: Float!
 }
